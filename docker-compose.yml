@@ -1,0 +1,56 @@
+version: '2'
+services:
+  php:
+    image:
+    container_name: '<project>_php'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+  web:
+    image:
+    container_name: '<project>_web'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+  db:
+    image:
+    container_name: '<project>_db'
+    depends_on:
+    volumes:
+    environment:
+      MYSQL_DATABASE:
+      MYSQL_ROOT_PASSWORD:
+    ports:
+  blackfire:
+    image: blackfire/blackfire
+    container_name: '<project>_blackfire'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+  memcached:
+    image: memcached:1.4.25
+    container_name: '<project>_memcache'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: '<project>_mailhog'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: '<project>_selenium'
+    depends_on:
+    volumes:
+    environment:
+    ports:
+volumes:
+  mysql-data:
+    driver: local
