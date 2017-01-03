@@ -21,6 +21,7 @@ HELP_FUN = \
 	%help; \
 	while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
 	print "usage: make [target]\n\n"; \
+	print "see makefile for additional commands\n\n"; \
 	for (sort keys %help) { \
 	print "${WHITE}$$_:${RESET}\n"; \
 	for (@{$$help{$$_}}) { \
