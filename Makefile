@@ -7,7 +7,6 @@
 # A category can be added with @category. Team defaults:
 # 	dev-environment
 # 	docker
-# 	drush
 # 	test
 
 # Output colors
@@ -36,25 +35,54 @@ help: ## Show help (same if no target is specified).
 #
 # Dev Environment
 #
-install:		##@dev-environment Build development environment from scratch.
+install:	##@dev-environment Build development environment from scratch.
 
-import-db:	##@dev-environment Download `database.sql` from AWS.
+fetch-db:	##@dev-environment Download `database.sql` from AWS.
+
+fetch-files:	##dev-environment Download `/files` from AWS.
+
+import-db:	##dev-environment Import locally cached copy of `database.sql` to proj dir.
+
+import-files:	##dev-environment Import locally cached copy of `/files` to proj dir.
+
+pull-db:	##dev-environment Download AND import `database.sql`.
+	make fetch-db
+	make import-db
+
+pull-files:	##dev-environment Download AND import `/files`.
+	make fetch-files
+	make import-files
+
+pull-all:	##dev-environment Download AND import `database.sql` + `/files`.
+	make pull-db
+	make pull-files
+
+prep-site:	##@drush Run site-installation drush commands (updb, cc all, fra, etc).
 #Example:
-	#Import `database.sql` from AWS.
-	#if [ ! -f db/database.sql ]; then mkdir -p db; aws s3 cp s3://savaslabs-omega/seed-database/database.sql.gz db/; gunzip db/database.sql.gz -f; fi
-	#Import `files` dir from AWS.
-	#aws s3 sync s3://savaslabs-hptn/files www/web/sites/default/files
+	#-docker-compose exec -T web drush @omega.docker sql-query "DELETE FROM cache WHERE cid LIKE 'ctools_plugin_files%';"
+	#-docker-compose exec -T web drush @omega.docker rr -yv
+	#-docker-compose exec -T web drush @omega.docker updb --cache-clear=0 -yv
+	#-docker-compose exec -T web drush @omega.docker cc all -yv
+	#-docker-compose exec -T web drush @omega.docker fr-all -yv
+	#-docker-compose exec -T web drush @omega.docker en maillog -yv
+	#-docker-compose exec -T web drush @omega.docker composer-json-rebuild -yv
+	#-docker-compose exec -T web drush @omega.docker composer-manager install -yv
+	#-docker-compose exec -T web drush @omega.docker omega-cenium-create-key -yv
+
+uli:  	##@drush Outputs one-time admin login link for local dev.
+#Example:
+	#docker-compose exec -T web drush @hptn.docker uli
 
 #
 # Docker
 #
-up: 		##@docker Start containers and display status.
+up: 	##@docker Start containers and display status.
 #Example:
 	#make down
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml up -d
 	#make status
 
-down:		##@docker Stop and remove containers.
+down:	##@docker Stop and remove containers.
 #Example:
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml down
 
@@ -69,16 +97,14 @@ status: ##@docker Print docker logs and container status.
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml ps
 
 #
-# Drush
-#
-uli:  	##@drush Outputs one-time admin login link for local dev.
-#Example:
-	#docker-compose exec -T web drush @hptn.docker uli
-
-#
 # Tests
 #
-tests:  ##@test Run Behat test suite.
+tests:	##@test Run code standard and Behat tests
+	make behat
+	make phpcs
+	make phpcbf
+
+behat:  ##@test Run Behat test suite.
 #Example:
 	#docker-compose exec -T web behat -c www/tests/behat.yml --tags=~@failing --colors -f progress
 
