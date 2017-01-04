@@ -39,19 +39,13 @@ install:	##@dev-environment Build development environment from scratch.
 
 fetch-db:	##@dev-environment Download `database.sql` from AWS.
 
-fetch-files:	##dev-environment Download `/files` from AWS.
-
 import-db:	##dev-environment Import locally cached copy of `database.sql` to proj dir.
-
-import-files:	##dev-environment Import locally cached copy of `/files` to proj dir.
 
 pull-db:	##dev-environment Download AND import `database.sql`.
 	make fetch-db
 	make import-db
 
 pull-files:	##dev-environment Download AND import `/files`.
-	make fetch-files
-	make import-files
 
 pull-all:	##dev-environment Download AND import `database.sql` + `/files`.
 	make pull-db
