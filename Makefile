@@ -7,6 +7,7 @@
 # A category can be added with @category. Team defaults:
 # 	dev-environment
 # 	docker
+# 	drush
 # 	test
 
 # Output colors
@@ -39,33 +40,17 @@ install:	##@dev-environment Build development environment from scratch.
 
 fetch-db:	##@dev-environment Download `database.sql` from AWS.
 
-import-db:	##dev-environment Import locally cached copy of `database.sql` to proj dir.
+import-db:	##@dev-environment Import locally cached copy of `database.sql` to proj dir.
 
-pull-db:	##dev-environment Download AND import `database.sql`.
+pull-db:	##@dev-environment Download AND import `database.sql`.
 	make fetch-db
 	make import-db
 
-pull-files:	##dev-environment Download AND import `/files`.
+pull-files:	##@dev-environment Download AND import `/files`.
 
-pull-all:	##dev-environment Download AND import `database.sql` + `/files`.
+pull-all:	##@dev-environment Download AND import `database.sql` + `/files`.
 	make pull-db
 	make pull-files
-
-prep-site:	##@drush Run site-installation drush commands (updb, cc all, fra, etc).
-#Example:
-	#-docker-compose exec -T web drush @omega.docker sql-query "DELETE FROM cache WHERE cid LIKE 'ctools_plugin_files%';"
-	#-docker-compose exec -T web drush @omega.docker rr -yv
-	#-docker-compose exec -T web drush @omega.docker updb --cache-clear=0 -yv
-	#-docker-compose exec -T web drush @omega.docker cc all -yv
-	#-docker-compose exec -T web drush @omega.docker fr-all -yv
-	#-docker-compose exec -T web drush @omega.docker en maillog -yv
-	#-docker-compose exec -T web drush @omega.docker composer-json-rebuild -yv
-	#-docker-compose exec -T web drush @omega.docker composer-manager install -yv
-	#-docker-compose exec -T web drush @omega.docker omega-cenium-create-key -yv
-
-uli:  	##@drush Outputs one-time admin login link for local dev.
-#Example:
-	#docker-compose exec -T web drush @hptn.docker uli
 
 #
 # Docker
@@ -89,6 +74,25 @@ status: ##@docker Print docker logs and container status.
 #Example:
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml logs
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml ps
+
+#
+# Drush
+#
+prep-site:	##@drush Run site-installation drush commands (updb, cc all, fra, etc).
+#Example:
+	#-docker-compose exec -T web drush @omega.docker sql-query "DELETE FROM cache WHERE cid LIKE 'ctools_plugin_files%';"
+	#-docker-compose exec -T web drush @omega.docker rr -yv
+	#-docker-compose exec -T web drush @omega.docker updb --cache-clear=0 -yv
+	#-docker-compose exec -T web drush @omega.docker cc all -yv
+	#-docker-compose exec -T web drush @omega.docker fr-all -yv
+	#-docker-compose exec -T web drush @omega.docker en maillog -yv
+	#-docker-compose exec -T web drush @omega.docker composer-json-rebuild -yv
+	#-docker-compose exec -T web drush @omega.docker composer-manager install -yv
+	#-docker-compose exec -T web drush @omega.docker omega-cenium-create-key -yv
+
+uli:  	##@drush Outputs one-time admin login link for local dev.
+#Example:
+	#docker-compose exec -T web drush @hptn.docker uli
 
 #
 # Tests
