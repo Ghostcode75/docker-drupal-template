@@ -65,7 +65,7 @@ down:	##@docker Stop and remove containers.
 #Example:
 	#docker-compose -f docker-compose.yml -f docker-compose-sync.yml down
 
-clean:  ##@docker Unisntall and remove application services and data.
+clean:  ##@docker Uninstall and remove application services and data.
 #Example:
 	#-docker-compose -f docker-compose.yml -f docker-compose-sync.yml down
 	#-docker volume rm hptn_mysql-data
